@@ -2,7 +2,7 @@
 <Project Sdk="Dalamud.NET.Sdk/13.0.0">
   <PropertyGroup>
     <Authors>Asriel Camora</Authors>
-    <Version>2.8.0.1</Version>
+    <Version>2.8.0.2</Version>
     <PackageProjectUrl>https://github.com/cycleapple/Craftimizer/tree/api13-tw</PackageProjectUrl>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>

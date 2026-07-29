@@ -111,7 +111,7 @@ public sealed class MacroEditor : Window, IDisposable
     private CancellationTokenSource? popupImportUrlTokenSource;
     private CommunityMacros.CommunityMacro? popupImportUrlMacro;
 
-    public MacroEditor(CharacterStats characterStats, RecipeData recipeData, CrafterBuffs buffs, IEnumerable<int>? ingredientHqCounts, IEnumerable<ActionType> actions, Action<IEnumerable<ActionType>>? setter) : base("Craftimizer Macro Editor", WindowFlags)
+    public MacroEditor(CharacterStats characterStats, RecipeData recipeData, CrafterBuffs buffs, IEnumerable<int>? ingredientHqCounts, IEnumerable<ActionType> actions, Action<IEnumerable<ActionType>>? setter) : base("Craftimizer 巨集編輯器", WindowFlags)
     {
         CharacterStats = characterStats;
         RecipeData = recipeData;
@@ -150,13 +150,13 @@ public sealed class MacroEditor : Window, IDisposable
                 Icon = FontAwesomeIcon.Cog,
                 IconOffset = new(2, 1),
                 Click = _ => Service.Plugin.OpenSettingsTab("Macro Editor"),
-                ShowTooltip = () => ImGuiUtils.Tooltip("Open Settings")
+                ShowTooltip = () => ImGuiUtils.Tooltip("開啟設定")
             },
             new() {
                 Icon = FontAwesomeIcon.Heart,
                 IconOffset = new(2, 1),
                 Click = _ => Util.OpenLink(Plugin.Plugin.SupportLink),
-                ShowTooltip = () => ImGuiUtils.Tooltip("Support me on Ko-fi!")
+                ShowTooltip = () => ImGuiUtils.Tooltip("在 Ko-fi 贊助作者！")
             }
         ];
 
@@ -254,7 +254,7 @@ public sealed class MacroEditor : Window, IDisposable
     {
         var oldStats = CharacterStats;
 
-        ImGuiUtils.TextCentered("Crafter");
+        ImGuiUtils.TextCentered("製作者");
 
         var textClassName = RecipeData.ClassJob.GetAbbreviation();
         var textClassSize = AxisFont.CalcTextSize(textClassName);
@@ -350,7 +350,7 @@ public sealed class MacroEditor : Window, IDisposable
                             CharacterStats = CharacterStats with { HasSplendorousBuff = !v };
                     }
                     if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-                        ImGuiUtils.Tooltip(CharacterStats.HasSplendorousBuff ? $"Splendorous Tool" : "No Splendorous Tool");
+                        ImGuiUtils.Tooltip(CharacterStats.HasSplendorousBuff ? $"華美型工具" : "未裝備華美型工具");
                 }
                 ImGui.SameLine(0, 5);
                 bool? newIsSpecialist = null;
@@ -371,7 +371,7 @@ public sealed class MacroEditor : Window, IDisposable
                         }
                     }
                     if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-                        ImGuiUtils.Tooltip(v ? $"Specialist" : "Not a Specialist");
+                        ImGuiUtils.Tooltip(v ? $"專家" : "非專家");
                 }
                 ImGui.SameLine(0, 5);
                 {
@@ -384,7 +384,7 @@ public sealed class MacroEditor : Window, IDisposable
                             CharacterStats = CharacterStats with { CanUseManipulation = !v };
                     }
                     if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-                        ImGuiUtils.Tooltip(CharacterStats.CanUseManipulation && manipLevel <= CharacterStats.Level ? $"Can Use Manipulation" : "Cannot Use Manipulation");
+                        ImGuiUtils.Tooltip(CharacterStats.CanUseManipulation && manipLevel <= CharacterStats.Level ? $"可使用掌握" : "無法使用掌握");
                 }
 
                 ImGui.TableNextColumn();
@@ -394,7 +394,7 @@ public sealed class MacroEditor : Window, IDisposable
                 (uint ItemId, bool HQ)? newFoodBuff = null;
                 ImGui.Image(WellFedBadge.Handle, buffBadgeSize);
                 if (ImGui.IsItemHovered())
-                    ImGuiUtils.Tooltip("Food");
+                    ImGuiUtils.Tooltip("食物");
                 ImGui.SameLine(0, 5);
                 {
                     ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
@@ -403,7 +403,7 @@ public sealed class MacroEditor : Window, IDisposable
                         ImGuiUtils.Tooltip(FormatItemBuffDescription(Buffs.Food));
                     if (combo)
                     {
-                        if (ImGui.Selectable("None", Buffs.Food.ItemId == 0))
+                        if (ImGui.Selectable("無###FoodNone", Buffs.Food.ItemId == 0))
                             newFoodBuff = (0, false);
 
                         foreach (var food in FoodStatus.OrderedFoods)
@@ -429,7 +429,7 @@ public sealed class MacroEditor : Window, IDisposable
                 (uint ItemId, bool HQ)? newMedicineBuff = null;
                 ImGui.Image(MedicatedBadge.Handle, buffBadgeSize);
                 if (ImGui.IsItemHovered())
-                    ImGuiUtils.Tooltip("Medicine");
+                    ImGuiUtils.Tooltip("藥品");
                 ImGui.SameLine(0, 5);
                 {
                     ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
@@ -438,7 +438,7 @@ public sealed class MacroEditor : Window, IDisposable
                         ImGuiUtils.Tooltip(FormatItemBuffDescription(Buffs.Medicine));
                     if (combo)
                     {
-                        if (ImGui.Selectable("None", Buffs.Medicine.ItemId == 0))
+                        if (ImGui.Selectable("無###MedicineNone", Buffs.Medicine.ItemId == 0))
                             newMedicineBuff = (0, false);
 
                         foreach (var medicine in FoodStatus.OrderedMedicines)
@@ -477,7 +477,7 @@ public sealed class MacroEditor : Window, IDisposable
                         ImGuiUtils.Tooltip(FormatFCBuffDescription(fcBuffName, fcStatName, Buffs.FC.Craftsmanship));
                     if (combo)
                     {
-                        if (ImGui.Selectable("None", Buffs.FC.Craftsmanship == 0))
+                            if (ImGui.Selectable("無###CraftsmanshipNone", Buffs.FC.Craftsmanship == 0))
                             newFCCraftsmanshipBuff = 0;
 
                         for (var i = 1; i <= 3; ++i)
@@ -504,7 +504,7 @@ public sealed class MacroEditor : Window, IDisposable
                         ImGuiUtils.Tooltip(FormatFCBuffDescription(fcBuffName, fcStatName, Buffs.FC.Control));
                     if (combo)
                     {
-                        if (ImGui.Selectable("None", Buffs.FC.Control == 0))
+                            if (ImGui.Selectable("無###ControlNone", Buffs.FC.Control == 0))
                             newFCControlBuff = 0;
 
                         for (var i = 1; i <= 3; ++i)
@@ -738,7 +738,7 @@ public sealed class MacroEditor : Window, IDisposable
         var oldStartingQuality = StartingQuality;
         var adjustedJobLevel = RecipeData.AdjustedJobLevel;
 
-        ImGuiUtils.TextCentered("Recipe");
+        ImGuiUtils.TextCentered("配方");
 
         var textStars = new string('★', RecipeData!.Table.Stars);
         var textStarsSize = Vector2.Zero;
@@ -850,7 +850,7 @@ public sealed class MacroEditor : Window, IDisposable
             ImGui.SameLine(0, 3);
             ImGui.Image(CosmicExplorationBadge.Handle, new(imageSize));
             if (ImGui.IsItemHovered())
-                ImGuiUtils.Tooltip($"Cosmic Exploration");
+                ImGuiUtils.Tooltip($"宇宙探索");
         }
 
         if (isCollectable)
@@ -859,7 +859,7 @@ public sealed class MacroEditor : Window, IDisposable
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + badgeOffset);
             ImGui.Image(CollectibleBadge.Handle, badgeSize);
             if (ImGui.IsItemHovered())
-                ImGuiUtils.Tooltip($"Collectible");
+                ImGuiUtils.Tooltip($"收藏品");
         }
 
         if (isExpert)
@@ -868,7 +868,7 @@ public sealed class MacroEditor : Window, IDisposable
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() + badgeOffset);
             ImGui.Image(ExpertBadge.Handle, badgeSize);
             if (ImGui.IsItemHovered())
-                ImGuiUtils.Tooltip($"Expert Recipe");
+                ImGuiUtils.Tooltip($"專家配方");
         }
 
         using (var statsTable = ImRaii.Table("stats", 3, ImGuiTableFlags.BordersInnerV))
@@ -881,17 +881,17 @@ public sealed class MacroEditor : Window, IDisposable
 
                 ImGui.TableNextColumn();
                 ImGui.AlignTextToFramePadding();
-                ImGui.TextUnformatted("Progress");
+            ImGui.TextUnformatted("作業精度");
                 ImGui.SameLine();
                 ImGuiUtils.TextRight($"{RecipeData.RecipeInfo.MaxProgress}");
 
                 ImGui.TableNextColumn();
-                ImGui.TextUnformatted("Quality");
+            ImGui.TextUnformatted("品質");
                 ImGui.SameLine();
                 ImGuiUtils.TextRight($"{RecipeData.RecipeInfo.MaxQuality}");
 
                 ImGui.TableNextColumn();
-                ImGui.TextUnformatted("Durability");
+            ImGui.TextUnformatted("耐久");
                 ImGui.SameLine();
                 ImGuiUtils.TextRight($"{RecipeData.RecipeInfo.MaxDurability}");
             }
@@ -924,7 +924,7 @@ public sealed class MacroEditor : Window, IDisposable
                 ImGui.TableNextColumn();
                 ImGui.AlignTextToFramePadding();
                 ImGui.SetCursorPosY(ImGui.GetCursorPosY() + ImGui.GetStyle().FramePadding.Y);
-                ImGuiUtils.TextCentered($"Starting Quality");
+        ImGuiUtils.TextCentered($"初期品質");
                 ImGui.SetCursorPosY(ImGui.GetCursorPosY() - ImGui.GetStyle().FramePadding.Y);
                 ImGuiUtils.TextCentered($"{StartingQuality}");
             }
@@ -1216,7 +1216,7 @@ public sealed class MacroEditor : Window, IDisposable
                 var panelHeight = Math.Max(buffHeight, infoHeight);
 
                 ImGui.TableNextColumn();
-                using (ImRaii2.GroupPanel("Buffs", -1, out _))
+                    using (ImRaii2.GroupPanel("增益狀態", -1, out _))
                 {
                     using var _font = AxisFont.Push();
 
@@ -1254,7 +1254,7 @@ public sealed class MacroEditor : Window, IDisposable
                 }
 
                 ImGui.TableNextColumn();
-                using (ImRaii2.GroupPanel("Info", -1, out _))
+                    using (ImRaii2.GroupPanel("資訊", -1, out _))
                 {
                     var actions = Macro.Actions.ToArray();
                     var waitTime = actions.Sum(a => a.Base().MacroWaitTime);
@@ -1269,12 +1269,12 @@ public sealed class MacroEditor : Window, IDisposable
                     using (ImRaii.Group())
                     {
                         ImGui.SetCursorPosY(ImGui.GetCursorPos().Y + (panelHeight - height) / 2f);
-                        ImGuiUtils.TextCentered($"{actions.Length} Step{(actions.Length != 1 ? "s" : string.Empty)}");
-                        ImGuiUtils.TextCentered($"{waitTime} sec");
+                        ImGuiUtils.TextCentered($"{actions.Length} 個步驟");
+                        ImGuiUtils.TextCentered($"{waitTime} 秒");
                         if (ImGui.IsItemHovered())
-                            ImGuiUtils.Tooltip($"Optimal Time: {waitTimeOptimal:0.#} sec");
+                            ImGuiUtils.Tooltip($"最佳時間：{waitTimeOptimal:0.#} 秒");
                         if (delineationCount != 0)
-                            ImGuiUtils.TextCentered($"{delineationCount} Delineation{(delineationCount != 1 ? "s" : string.Empty)}");
+                            ImGuiUtils.TextCentered($"{delineationCount} 張設計圖");
                     }
                 }
             }
@@ -1287,7 +1287,7 @@ public sealed class MacroEditor : Window, IDisposable
         var imageSize = ImGui.GetFrameHeight() * 2;
         var lastState = Macro.InitialState;
 
-        using var panel = ImRaii2.GroupPanel("Macro", -1, out var availSpace);
+        using var panel = ImRaii2.GroupPanel("巨集", -1, out var availSpace);
         ImGui.Dummy(new(0, imageSize));
         ImGui.SameLine(0, 0);
 
@@ -1377,15 +1377,15 @@ public sealed class MacroEditor : Window, IDisposable
         {
             if (MacroSetter != null)
             {
-                if (ImGui.Button("Save", new(quarterWidth, height)))
+                if (ImGui.Button("儲存", new(quarterWidth, height)))
                     SaveMacro();
                 ImGui.SameLine();
-                if (ImGui.Button("Save As", new(quarterWidth, height)))
+                if (ImGui.Button("另存新檔", new(quarterWidth, height)))
                     ShowSaveAsPopup();
             }
             else
             {
-                if (ImGui.Button("Save", new(halfWidth, height)))
+                if (ImGui.Button("儲存", new(halfWidth, height)))
                     ShowSaveAsPopup();
             }
         }
@@ -1396,24 +1396,24 @@ public sealed class MacroEditor : Window, IDisposable
             if (SolverTask?.Cancelling ?? false)
             {
                 using var _disabled = ImRaii.Disabled();
-                ImGui.Button("Stopping", new(halfWidth, height));
+                ImGui.Button("正在停止", new(halfWidth, height));
             }
             else
             {
-                if (ImGui.Button("Stop", new(halfWidth, height)))
+                if (ImGui.Button("停止", new(halfWidth, height)))
                     SolverTask?.Cancel();
             }
         }
         else
         {
-            if (ImGui.Button(SolverStartStepCount.HasValue ? "Regenerate" : "Generate", new(halfWidth, height)))
+            if (ImGui.Button(SolverStartStepCount.HasValue ? "重新產生" : "產生", new(halfWidth, height)))
                 CalculateBestMacro();
         }
         ImGui.SameLine();
         if (ImGuiUtils.IconButtonSquare(FontAwesomeIcon.Paste))
             MacroCopy.Copy(Macro.Actions.ToArray());
         if (ImGui.IsItemHovered())
-            ImGuiUtils.Tooltip("Copy to Clipboard");
+            ImGuiUtils.Tooltip("複製到剪貼簿");
         ImGui.SameLine();
         using (var _disabled = ImRaii.Disabled(SolverRunning))
         {
@@ -1421,7 +1421,7 @@ public sealed class MacroEditor : Window, IDisposable
                 ShowImportPopup();
         }
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-            ImGuiUtils.Tooltip("Import Macro");
+            ImGuiUtils.Tooltip("匯入巨集");
         DrawImportPopup();
         ImGui.SameLine();
         if (DefaultActions.Length > 0)
@@ -1437,7 +1437,7 @@ public sealed class MacroEditor : Window, IDisposable
                 }
             }
             if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-                ImGuiUtils.Tooltip("Reset");
+                ImGuiUtils.Tooltip("重設");
         }
         ImGui.SameLine();
         using (var _disabled = ImRaii.Disabled(SolverRunning))
@@ -1449,7 +1449,7 @@ public sealed class MacroEditor : Window, IDisposable
             }
         }
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-            ImGuiUtils.Tooltip("Clear");
+            ImGuiUtils.Tooltip("清除");
     }
 
     private void ShowSaveAsPopup()
@@ -1467,7 +1467,7 @@ public sealed class MacroEditor : Window, IDisposable
             if (ImGui.IsWindowAppearing())
                 ImGui.SetKeyboardFocusHere();
             ImGui.SetNextItemWidth(ImGui.CalcItemWidth());
-            if (ImGui.InputTextWithHint($"##setName", "Name", ref popupSaveAsMacroName, 100, ImGuiInputTextFlags.AutoSelectAll | ImGuiInputTextFlags.EnterReturnsTrue))
+            if (ImGui.InputTextWithHint($"##setName", "名稱", ref popupSaveAsMacroName, 100, ImGuiInputTextFlags.AutoSelectAll | ImGuiInputTextFlags.EnterReturnsTrue))
             {
                 if (!string.IsNullOrWhiteSpace(popupSaveAsMacroName))
                 {
@@ -1509,13 +1509,13 @@ public sealed class MacroEditor : Window, IDisposable
             using (var panel = ImRaii2.GroupPanel("##text", -1, out var availWidth))
             {
                 ImGui.AlignTextToFramePadding();
-                ImGuiUtils.TextCentered("Paste your macro here");
+                ImGuiUtils.TextCentered("在此貼上巨集");
                 {
                     using var font = ImRaii.PushFont(UiBuilder.MonoFont);
                     ImGuiUtils.InputTextMultilineWithHint("", ExampleMacro, ref popupImportText, 2048, new(availWidth, ImGui.GetTextLineHeight() * 15 + ImGui.GetStyle().FramePadding.Y), ImGuiInputTextFlags.AutoSelectAll);
                 }
                 using (var _disabled = ImRaii.Disabled(popupImportUrlTokenSource != null))
-                    submittedText = ImGui.Button("Import", new(availWidth, 0));
+                    submittedText = ImGui.Button("匯入", new(availWidth, 0));
             }
 
             using (var panel = ImRaii2.GroupPanel("##url", -1, out var availWidth))
@@ -1523,7 +1523,7 @@ public sealed class MacroEditor : Window, IDisposable
                 var availOffset = ImGui.GetContentRegionAvail().X - availWidth;
 
                 ImGui.AlignTextToFramePadding();
-                ImGuiUtils.TextCentered("or provide a url to it");
+                ImGuiUtils.TextCentered("或提供巨集網址");
                 ImGui.SameLine();
                 using (var color = ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudGrey))
                 {
@@ -1533,15 +1533,15 @@ public sealed class MacroEditor : Window, IDisposable
                 if (ImGui.IsItemHovered())
                 {
                     using var t = ImRaii.Tooltip();
-                    ImGui.TextUnformatted("Supported sites:");
+                    ImGui.TextUnformatted("支援的網站：");
                     ImGui.BulletText("ffxivteamcraft.com");
                     ImGui.BulletText("craftingway.app");
-                    ImGui.TextUnformatted("More suggestions are appreciated!");
+                    ImGui.TextUnformatted("歡迎提供更多網站建議！");
                 }
                 ImGui.SetNextItemWidth(availWidth);
                 submittedUrl = ImGui.InputTextWithHint("", ExampleUrl, ref popupImportUrl, 2048, ImGuiInputTextFlags.AutoSelectAll | ImGuiInputTextFlags.EnterReturnsTrue);
                 using (var _disabled = ImRaii.Disabled(popupImportUrlTokenSource != null))
-                    submittedUrl = ImGui.Button("Import", new(availWidth, 0)) || submittedUrl;
+                    submittedUrl = ImGui.Button("匯入", new(availWidth, 0)) || submittedUrl;
             }
 
             ImGui.Dummy(default);
@@ -1553,7 +1553,7 @@ public sealed class MacroEditor : Window, IDisposable
                 ImGui.Dummy(default);
             }
 
-            if (ImGuiUtils.ButtonCentered("Nevermind", new(ImGui.GetContentRegionAvail().X / 2f, 0)))
+            if (ImGuiUtils.ButtonCentered("取消", new(ImGui.GetContentRegionAvail().X / 2f, 0)))
             {
                 popupImportUrlTokenSource?.Cancel();
                 ImGui.CloseCurrentPopup();

@@ -26,7 +26,7 @@ public sealed class MacroList : Window, IDisposable
     private IReadOnlyList<Macro> Macros => Service.Configuration.Macros;
     private Dictionary<Macro, SimulationState> MacroStateCache { get; } = [];
 
-    public MacroList() : base("Craftimizer Macro List", WindowFlags, false)
+    public MacroList() : base("Craftimizer 巨集清單", WindowFlags, false)
     {
         RefreshSearch();
 
@@ -45,13 +45,13 @@ public sealed class MacroList : Window, IDisposable
                 Icon = FontAwesomeIcon.Cog,
                 IconOffset = new(2, 1),
                 Click = _ => Service.Plugin.OpenSettingsTab("General"),
-                ShowTooltip = () => ImGuiUtils.Tooltip("Open Settings")
+                ShowTooltip = () => ImGuiUtils.Tooltip("開啟設定")
             },
             new() {
                 Icon = FontAwesomeIcon.Heart,
                 IconOffset = new(2, 1),
                 Click = _ => Util.OpenLink(Plugin.Plugin.SupportLink),
-                ShowTooltip = () => ImGuiUtils.Tooltip("Support me on Ko-fi!")
+                ShowTooltip = () => ImGuiUtils.Tooltip("在 Ko-fi 贊助作者！")
             }
         ];
 
@@ -111,10 +111,10 @@ public sealed class MacroList : Window, IDisposable
         }
         else
         {
-            var text1 = "You have no macros! Create one by opening";
-            var text2 = "the Macro Editor here or from the Crafting Log.";
-            var text3 = "Open Crafting Log";
-            var text4 = "Open Macro Editor";
+            var text1 = "目前沒有巨集。你可以從這裡或製作筆記";
+            var text2 = "開啟巨集編輯器來建立一個巨集。";
+            var text3 = "開啟製作筆記";
+            var text4 = "開啟巨集編輯器";
             var buttonRowWidth = ImGui.CalcTextSize(text3).X + ImGui.CalcTextSize(text4).X + ImGui.GetStyle().ItemSpacing.X * 5;
             var size = new Vector2(
                 Math.Max(
@@ -142,7 +142,7 @@ public sealed class MacroList : Window, IDisposable
     private void DrawSearchBar()
     {
         ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
-        if (ImGui.InputTextWithHint("##search", "Search", ref searchText, 100))
+        if (ImGui.InputTextWithHint("##search", "搜尋", ref searchText, 100))
             RefreshSearch();
     }
 
@@ -186,7 +186,7 @@ public sealed class MacroList : Window, IDisposable
                         ImGui.GetColorU32(ImGuiCol.TableBorderLight),
                         ImGui.GetColorU32(Colors.Quality));
                         if (ImGui.IsItemHovered())
-                            ImGuiUtils.Tooltip($"Quality: {state.Quality} / {state.Input.Recipe.MaxQuality}");
+                            ImGuiUtils.Tooltip($"品質：{state.Quality} / {state.Input.Recipe.MaxQuality}");
                     }
                     else
                     {
@@ -197,7 +197,7 @@ public sealed class MacroList : Window, IDisposable
                         ImGui.GetColorU32(ImGuiCol.TableBorderLight),
                         ImGui.GetColorU32(Colors.Progress));
                         if (ImGui.IsItemHovered())
-                            ImGuiUtils.Tooltip($"Progress: {state.Progress} / {state.Input.Recipe.MaxProgress}");
+                            ImGuiUtils.Tooltip($"作業精度：{state.Progress} / {state.Input.Recipe.MaxProgress}");
                     }
                 }
                 else
@@ -209,7 +209,7 @@ public sealed class MacroList : Window, IDisposable
                         ImGui.GetColorU32(ImGuiCol.TableBorderLight),
                         ImGui.GetColorU32(Colors.Progress));
                     if (ImGui.IsItemHovered())
-                        ImGuiUtils.Tooltip($"Progress: {state.Progress} / {state.Input.Recipe.MaxProgress}");
+                        ImGuiUtils.Tooltip($"作業精度：{state.Progress} / {state.Input.Recipe.MaxProgress}");
 
                     ImGui.SameLine(0, spacing);
                     ImGuiUtils.ArcProgress(
@@ -219,7 +219,7 @@ public sealed class MacroList : Window, IDisposable
                         ImGui.GetColorU32(ImGuiCol.TableBorderLight),
                         ImGui.GetColorU32(Colors.Quality));
                     if (ImGui.IsItemHovered())
-                        ImGuiUtils.Tooltip($"Quality: {state.Quality} / {state.Input.Recipe.MaxQuality}");
+                        ImGuiUtils.Tooltip($"品質：{state.Quality} / {state.Input.Recipe.MaxQuality}");
 
                     ImGuiUtils.ArcProgress((float)state.Durability / state.Input.Recipe.MaxDurability,
                         miniRowHeight / 2f,
@@ -227,7 +227,7 @@ public sealed class MacroList : Window, IDisposable
                         ImGui.GetColorU32(ImGuiCol.TableBorderLight),
                         ImGui.GetColorU32(Colors.Durability));
                     if (ImGui.IsItemHovered())
-                        ImGuiUtils.Tooltip($"Remaining Durability: {state.Durability} / {state.Input.Recipe.MaxDurability}");
+                        ImGuiUtils.Tooltip($"剩餘耐久：{state.Durability} / {state.Input.Recipe.MaxDurability}");
 
                     ImGui.SameLine(0, spacing);
                     ImGuiUtils.ArcProgress(
@@ -237,7 +237,7 @@ public sealed class MacroList : Window, IDisposable
                         ImGui.GetColorU32(ImGuiCol.TableBorderLight),
                         ImGui.GetColorU32(Colors.CP));
                     if (ImGui.IsItemHovered())
-                        ImGuiUtils.Tooltip($"Remaining CP: {state.CP} / {state.Input.Stats.CP}");
+                        ImGuiUtils.Tooltip($"剩餘 CP：{state.CP} / {state.Input.Stats.CP}");
                 }
             }
 
@@ -246,18 +246,18 @@ public sealed class MacroList : Window, IDisposable
                 if (ImGuiUtils.IconButtonSquare(FontAwesomeIcon.Edit, miniRowHeight))
                     OpenEditor(macro);
                 if (ImGui.IsItemHovered())
-                    ImGuiUtils.Tooltip("Open in Macro Editor");
+                    ImGuiUtils.Tooltip("在巨集編輯器中開啟");
                 ImGui.SameLine(0, spacing);
                 if (ImGuiUtils.IconButtonSquare(FontAwesomeIcon.PencilAlt, miniRowHeight))
                     ShowRenamePopup(macro);
                 DrawRenamePopup(macro);
                 if (ImGui.IsItemHovered())
-                    ImGuiUtils.Tooltip("Rename");
+                    ImGuiUtils.Tooltip("重新命名");
 
                 if (ImGuiUtils.IconButtonSquare(FontAwesomeIcon.Paste, miniRowHeight))
                     MacroCopy.Copy(macro.Actions);
                 if (ImGui.IsItemHovered())
-                    ImGuiUtils.Tooltip("Copy to Clipboard");
+                    ImGuiUtils.Tooltip("複製到剪貼簿");
                 ImGui.SameLine(0, spacing);
                 using (var _disabled = ImRaii.Disabled(!ImGui.GetIO().KeyShift))
                 {
@@ -265,7 +265,7 @@ public sealed class MacroList : Window, IDisposable
                         Service.Configuration.RemoveMacro(macro);
                 }
                 if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-                    ImGuiUtils.Tooltip("Delete (Hold Shift)");
+                    ImGuiUtils.Tooltip("刪除（按住 Shift）");
             }
 
             ImGui.TableNextColumn();
@@ -291,7 +291,7 @@ public sealed class MacroList : Window, IDisposable
                             var pos = ImGui.GetCursorPos();
                             ImGui.Image(macro.Actions[i].GetIcon(RecipeData!.ClassJob).Handle, new(miniRowHeight), default, Vector2.One, new(1, 1, 1, .5f));
                             if (ImGui.IsItemHovered())
-                                ImGuiUtils.Tooltip($"{macro.Actions[i].GetName(RecipeData!.ClassJob)}\nand {amtMore} more");
+                                ImGuiUtils.Tooltip($"{macro.Actions[i].GetName(RecipeData!.ClassJob)}\n以及另外 {amtMore} 個技能");
                             ImGui.SetCursorPos(pos);
                             ImGui.GetWindowDrawList().AddRectFilled(ImGui.GetCursorScreenPos(), ImGui.GetCursorScreenPos() + new Vector2(miniRowHeight), ImGui.GetColorU32(ImGuiCol.FrameBg), miniRowHeight / 8f);
                             ImGui.GetWindowDrawList().AddTextClippedEx(ImGui.GetCursorScreenPos(), ImGui.GetCursorScreenPos() + new Vector2(miniRowHeight), $"+{amtMore}", null, new(.5f), null);
@@ -322,7 +322,7 @@ public sealed class MacroList : Window, IDisposable
             if (ImGui.IsWindowAppearing())
                 ImGui.SetKeyboardFocusHere();
             ImGui.SetNextItemWidth(ImGui.CalcItemWidth());
-            if (ImGui.InputTextWithHint($"##setName", "Name", ref popupMacroName, 100, ImGuiInputTextFlags.AutoSelectAll | ImGuiInputTextFlags.EnterReturnsTrue))
+            if (ImGui.InputTextWithHint($"##setName", "名稱", ref popupMacroName, 100, ImGuiInputTextFlags.AutoSelectAll | ImGuiInputTextFlags.EnterReturnsTrue))
             {
                 if (!string.IsNullOrWhiteSpace(popupMacroName))
                 {

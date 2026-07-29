@@ -93,13 +93,13 @@ public sealed unsafe class SynthHelper : Window, IDisposable
                 Icon = FontAwesomeIcon.Cog,
                 IconOffset = new(2, 1),
                 Click = _ => Service.Plugin.OpenSettingsTab("Synthesis Helper"),
-                ShowTooltip = () => ImGuiUtils.Tooltip("Open Settings")
+                ShowTooltip = () => ImGuiUtils.Tooltip("開啟設定")
             },
             new() {
                 Icon = FontAwesomeIcon.Heart,
                 IconOffset = new(2, 1),
                 Click = _ => Util.OpenLink(Plugin.Plugin.SupportLink),
-                ShowTooltip = () => ImGuiUtils.Tooltip("Support me on Ko-fi!")
+                ShowTooltip = () => ImGuiUtils.Tooltip("在 Ko-fi 贊助作者！")
             }
         ];
 
@@ -374,7 +374,7 @@ public sealed unsafe class SynthHelper : Window, IDisposable
     {
         var state = DisplayedState;
 
-        using (var panel = ImRaii2.GroupPanel("Buffs", -1, out _))
+            using (var panel = ImRaii2.GroupPanel("增益狀態", -1, out _))
         {
             using var _font = AxisFont.Push();
 
@@ -465,27 +465,26 @@ public sealed unsafe class SynthHelper : Window, IDisposable
             if (SolverTask?.Cancelling ?? false)
             {
                 using var _disabled = ImRaii.Disabled();
-                ImGui.Button("Stopping", new(-1, 0));
+                ImGui.Button("正在停止", new(-1, 0));
                 if (ImGui.IsItemHovered())
-                    ImGuiUtils.TooltipWrapped("This might could a while, sorry! Please report if this takes longer than a second.");
+                    ImGuiUtils.TooltipWrapped("停止可能需要一點時間；若超過一秒仍未完成，請回報此問題。");
             }
             else
             {
-                if (ImGui.Button("Stop", new(-1, 0)))
+                if (ImGui.Button("停止", new(-1, 0)))
                     SolverTask?.Cancel();
             }
         }
         else
         {
-            if (ImGui.Button("Retry", new(-1, 0)))
+            if (ImGui.Button("重試", new(-1, 0)))
                 AttemptRetry();
             if (ImGui.IsItemHovered())
-                ImGuiUtils.TooltipWrapped("Suggest a way to finish the crafting recipe. " +
-                                 "Results aren't perfect, and levels of success " +
-                                 "can vary wildly depending on the solver's settings.");
+                ImGuiUtils.TooltipWrapped("建議完成此製作配方的方法。結果不一定完美，" +
+                                 "成功程度也可能因求解器設定而有很大差異。");
         }
 
-        if (ImGui.Button("Open in Macro Editor", new(-1, 0)))
+        if (ImGui.Button("在巨集編輯器中開啟", new(-1, 0)))
             Service.Plugin.OpenMacroEditor(CharacterStats!, RecipeData!, new(Service.ClientState.LocalPlayer!.StatusList), null, [], null);
     }
 
