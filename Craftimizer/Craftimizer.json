@@ -1,9 +1,9 @@
 {
     "Author": "Asriel",
     "Name": "Craftimizer",
-    "Punchline": "Simulate crafts, create computer-assisted macros, and get mid-craft suggestions from the comfort of your own game!",
-    "Description": "Allows you to generate macros and simulate all sorts of crafts without having to open another app. Open your crafting log to get started!",
-    "RepoUrl": "https://github.com/WorkingRobot/Craftimizer",
+    "Punchline": "模擬製作、產生輔助巨集並提供製作中的技能建議。",
+    "Description": "不必開啟其他程式，即可產生巨集並模擬各類製作。開啟製作筆記即可開始使用。",
+    "RepoUrl": "https://github.com/cycleapple/Craftimizer/tree/api13-tw",
     "InternalName": "Craftimizer",
     "ApplicableVersion": "any",
     "Tags": [
