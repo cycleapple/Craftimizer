@@ -9,16 +9,6 @@ namespace Craftimizer.Plugin;
 
 internal static unsafe class ImGuiExtras
 {
-    // https://github.com/ImGuiNET/ImGui.NET/blob/069363672fed940ebdaa02f9b032c282b66467c7/src/CodeGenerator/definitions/cimgui/definitions.json#L25394
-[DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
-    private static extern bool igItemAdd(Vector4 bb, uint id, Vector4* navBb, uint flags);
-
-[DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
-    private static extern bool igItemSize_Vec2(Vector2 size, float text_baseline_y = -1.0f);
-
-[DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
-    private static extern void igRenderRectFilledRangeH(ImDrawList* draw_list, Vector4* rect, uint col, float x_start_norm, float x_end_norm, float rounding);
-
 // https://github.com/ImGuiNET/ImGui.NET/blob/069363672fed940ebdaa02f9b032c282b66467c7/src/ImGui.NET/Util.cs
     #region Util
 
