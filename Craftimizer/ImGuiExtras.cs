@@ -10,28 +10,16 @@ namespace Craftimizer.Plugin;
 internal static unsafe class ImGuiExtras
 {
     // https://github.com/ImGuiNET/ImGui.NET/blob/069363672fed940ebdaa02f9b032c282b66467c7/src/CodeGenerator/definitions/cimgui/definitions.json#L25394
-    [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
-    private static extern unsafe byte igInputTextEx(byte* label, byte* hint, byte* buf, int buf_size, Vector2 size, ImGuiInputTextFlags flags, ImGuiInputTextCallback? callback, void* user_data);
-
-    [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
+[DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
     private static extern bool igItemAdd(Vector4 bb, uint id, Vector4* navBb, uint flags);
 
-    [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
-    private static extern bool igButtonBehavior(Vector4 bb, uint id, bool* outHovered, bool* outHeld, ImGuiButtonFlags flags);
-
-    [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
+[DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
     private static extern bool igItemSize_Vec2(Vector2 size, float text_baseline_y = -1.0f);
 
-    [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
-    private static extern void igRenderFrame(Vector2 p_min, Vector2 p_max, uint fill_col, bool border = true, float rounding = 0.0f);
-
-    [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
+[DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
     private static extern void igRenderRectFilledRangeH(ImDrawList* draw_list, Vector4* rect, uint col, float x_start_norm, float x_end_norm, float rounding);
 
-    [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
-    private static extern ImGuiItemFlags igGetItemFlags();
-
-    // https://github.com/ImGuiNET/ImGui.NET/blob/069363672fed940ebdaa02f9b032c282b66467c7/src/ImGui.NET/Util.cs
+// https://github.com/ImGuiNET/ImGui.NET/blob/069363672fed940ebdaa02f9b032c282b66467c7/src/ImGui.NET/Util.cs
     #region Util
 
     private const int StackAllocationSizeLimit = 2048;
@@ -124,14 +112,14 @@ internal static unsafe class ImGuiExtras
         Unsafe.InitBlockUnaligned(utf8InputBytes + utf8InputByteCount, 0, clearBytesCount);
         Unsafe.CopyBlock(originalUtf8InputBytes, utf8InputBytes, (uint)inputBufSize);
 
-        var result = igInputTextEx(
+        var result = ImGuiNative.InputTextEx(
             utf8LabelBytes,
             utf8HintBytes,
             utf8InputBytes,
             inputBufSize,
             size,
             flags,
-            callback,
+            callback ?? default,
             user_data.ToPointer());
         if (!AreStringsEqual(originalUtf8InputBytes, inputBufSize, utf8InputBytes))
         {
@@ -162,7 +150,7 @@ internal static unsafe class ImGuiExtras
     {
         fixed (Vector4* navBbPtr = &navBb)
         {
-            return igItemAdd(bb, id, navBbPtr, flags);
+            return ImGuiP.ItemAdd(new ImRect(new Vector2(bb.X, bb.Y), new Vector2(bb.Z, bb.W)), id, new ImRectPtr((ImRect*)navBbPtr), (Dalamud.Bindings.ImGui.ImGuiItemFlags)flags);
         }
     }
 
@@ -171,21 +159,21 @@ internal static unsafe class ImGuiExtras
         fixed (bool* hoveredPtr = &hovered)
         fixed (bool* heldPtr = &held)
         {
-            return igButtonBehavior(bb, id, hoveredPtr, heldPtr, flags);
+            return ImGuiP.ButtonBehavior(new ImRect(new Vector2(bb.X, bb.Y), new Vector2(bb.Z, bb.W)), id, hoveredPtr, heldPtr, flags);
         }
     }
 
     public static unsafe void RenderFrame(Vector2 p_min, Vector2 p_max, uint fill_col, bool border = true, float rounding = 0.0f) =>
-        igRenderFrame(p_min, p_max, fill_col, border, rounding);
+        ImGuiP.RenderFrame(p_min, p_max, fill_col, border, rounding);
 
     public static unsafe void RenderRectFilledRangeH(ImDrawListPtr draw_list, Vector4 rect, uint col, float x_start_norm, float x_end_norm, float rounding) =>
-        igRenderRectFilledRangeH(draw_list, &rect, col, x_start_norm, x_end_norm, rounding);
+        ImGuiP.RenderRectFilledRangeH(draw_list, new ImRect(new Vector2(rect.X, rect.Y), new Vector2(rect.Z, rect.W)), col, x_start_norm, x_end_norm, rounding);
 
-    public static unsafe bool ItemSize(Vector2 size, float text_baseline_y = -1.0f) =>
-        igItemSize_Vec2(size, text_baseline_y);
+    public static unsafe void ItemSize(Vector2 size, float text_baseline_y = -1.0f) =>
+        ImGuiP.ItemSize(size, text_baseline_y);
 
     public static unsafe ImGuiItemFlags GetItemFlags() =>
-        igGetItemFlags();
+        (ImGuiItemFlags)ImGuiP.GetItemFlags();
 
     public static unsafe int? CalcWordWrapPositionA(this ImFontPtr font, float scale, ReadOnlySpan<char> text, float wrap_width)
     {
